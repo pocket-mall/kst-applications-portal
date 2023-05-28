@@ -1,0 +1,10 @@
+<form (keyup.end)="handleLogin()" (ngSubmit)="handleLogin()" [formGroup]="loginFormGroup">
+  <label for="login-email">Email:</label>
+  <input formControlName="email" id="login-email" required type="email">
+
+  <label for="login-password">Password:</label>
+  <input formControlName="password" id="login-password" required type="password">
+
+  <button type="submit">Login</button>
+</form>
+
