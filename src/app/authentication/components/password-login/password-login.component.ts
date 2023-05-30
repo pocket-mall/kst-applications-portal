@@ -1,18 +1,22 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
-import { Observable, Subject, Subscription, switchMap } from 'rxjs';
+import { Observable, Subject, Subscription, switchMap, tap } from 'rxjs';
 import { LoginFormModel } from '../../models/login.form.model';
+import { AppUserModel } from '../../models/app.user.model';
 
 @Component({
-	selector: 'kst-login',
+	selector: 'kst-password-login',
 	standalone: true,
 	imports: [CommonModule, ReactiveFormsModule],
-	templateUrl: './login.component.html',
-	styleUrls: ['./login.component.scss']
+	templateUrl: './password-login.component.html',
+	styleUrls: ['./password-login.component.scss']
 })
-export class LoginComponent implements OnDestroy {
+export class PasswordLoginComponent implements OnDestroy {
+	@Output()
+	public readonly onAuth: EventEmitter<AppUserModel> = new EventEmitter<AppUserModel>();
+
 	protected loginFormGroup = new FormGroup({
 		email: new FormControl('', [Validators.email, Validators.required]),
 		password: new FormControl('', [Validators.required])
@@ -44,7 +48,12 @@ export class LoginComponent implements OnDestroy {
 				.pipe(
 					switchMap(({ email, password }: LoginFormModel) =>
 						this.authenticationService.appUserAuthentication(email, password)
-					)
+					),
+					tap((appUser: AppUserModel | undefined) => {
+						if (appUser) {
+							this.onAuth.emit(appUser);
+						}
+					})
 				)
 				.subscribe()
 		);
