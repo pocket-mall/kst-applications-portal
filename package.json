@@ -20,6 +20,7 @@
     "@angular/platform-browser": "^16.0.3",
     "@angular/platform-browser-dynamic": "^16.0.3",
     "@angular/router": "^16.0.3",
+    "@mdi/font": "^7.2.96",
     "pocketbase": "^0.15.0",
     "rxjs": "~7.8.1",
     "tslib": "^2.5.2",
