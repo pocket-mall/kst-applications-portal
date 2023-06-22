@@ -4,6 +4,10 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { frenchPhoneNumberValidator } from '../../../common/validators/french-phone.validator';
 import { dateFormatValidator } from '../../../common/validators/date-format.validator';
 import { RestrictNumericDirective } from '../../../common/directives/restrict-numeric.directive';
+import { CivilityEnum } from '../../../profile/enums/civility.enum';
+import { AuthenticationService } from '../../services/authentication.service';
+import { deserializeObject } from '../../../common/helpers/deserializer';
+import { CreateUserRequestModel } from '../../models/create-user-request.model';
 
 @Component({
 	selector: 'kst-sign-up',
@@ -16,25 +20,27 @@ export class SignUpComponent {
 	protected labels: { [key: string]: string } = {};
 	protected isPasswordVisible: boolean;
 	protected eyeIconClass = 'mdi-eye';
+	protected civilityEnum: typeof CivilityEnum = CivilityEnum;
 
 	protected addressFormGroup = new FormGroup({
-		street: new FormControl(''),
-		city: new FormControl(''),
-		zipcode: new FormControl(''),
-		complement: new FormControl('')
+		street: new FormControl(undefined),
+		city: new FormControl(undefined),
+		zipcode: new FormControl(undefined),
+		complement: new FormControl(undefined)
 	});
 
 	protected signUpFormGroup = new FormGroup({
+		civility: new FormControl('', [Validators.required]),
 		lastName: new FormControl('', [Validators.required]),
 		firstName: new FormControl('', [Validators.required]),
 		phone: new FormControl('', [Validators.required, frenchPhoneNumberValidator]),
 		email: new FormControl('', [Validators.email, Validators.required]),
 		password: new FormControl('', [Validators.minLength(8), Validators.required]),
 		address: this.addressFormGroup,
-		birthday: new FormControl('', [dateFormatValidator])
+		birthday: new FormControl(undefined, [dateFormatValidator])
 	});
 
-	constructor() {
+	constructor(private readonly authenticationService: AuthenticationService) {
 		this.isPasswordVisible = false;
 		this.initializeLabels();
 	}
@@ -72,6 +78,11 @@ export class SignUpComponent {
 	protected onSubmit() {
 		if (this.signUpFormGroup.valid) {
 			const formData = this.signUpFormGroup.value;
+			const request = deserializeObject<CreateUserRequestModel>(formData, CreateUserRequestModel);
+			if (request) {
+				this.authenticationService.signUp(request).subscribe((profile: any) => console.log(profile));
+			}
+			console.log(formData);
 		} else {
 			Object.keys(this.signUpFormGroup.controls).forEach((controlName) => {
 				const control = this.signUpFormGroup.get(controlName);
@@ -82,6 +93,7 @@ export class SignUpComponent {
 	}
 
 	private initializeLabels() {
+		this.labels['Civility'] = 'Civility';
 		this.labels['lastName'] = 'Last Name';
 		this.labels['firstName'] = 'First Name';
 		this.labels['phone'] = 'Phone';

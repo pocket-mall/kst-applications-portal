@@ -1,4 +1,17 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="signUpFormGroup">
+	<div *ngFor="let civility of civilityEnum | keyvalue">
+		<label for="civility-{{ civility.value }}">{{ labels['civility'] }}</label>
+		<input
+			formControlName="civility"
+			id="civility-{{ civility.value }}"
+			type="radio"
+			value="{{ civility.value }}"
+		/>{{ civility.value }}
+		<div *ngIf="isControlInvalid('civility') && signUpFormGroup.get('civility')?.touched" class="error-message">
+			{{ getErrorMessage('civility') }}
+		</div>
+	</div>
+
 	<div>
 		<label for="lastName">{{ labels['lastName'] }}</label>
 		<input formControlName="lastName" id="lastName" type="text" />
