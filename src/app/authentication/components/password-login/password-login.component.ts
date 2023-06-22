@@ -47,7 +47,7 @@ export class PasswordLoginComponent implements OnDestroy {
 			this.handleLogin$
 				.pipe(
 					switchMap(({ email, password }: LoginFormModel) =>
-						this.authenticationService.appUserAuthentication(email, password)
+						this.authenticationService.appUserEmailAuth(email, password)
 					),
 					tap((appUser: AppUserModel | undefined) => {
 						if (appUser) {

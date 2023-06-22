@@ -24,7 +24,7 @@ export class AuthenticationService {
 		);
 	}
 
-	public appUserAuthentication(email: string, password: string): Observable<AppUserModel | undefined> {
+	public appUserEmailAuth(email: string, password: string): Observable<AppUserModel | undefined> {
 		return from(this.pocketBaseClient.collection(this.userCollection).authWithPassword(email, password)).pipe(
 			map((authData: RecordAuthResponse) => {
 				return deserializeObject<AppUserModel>(authData.record, AppUserModel) ?? undefined;
