@@ -1,0 +1,4 @@
+<div *ngIf="user()===undefined" class="login-container">
+  <kst-password-login (onAuth)="handleLoggedInUser($event)"></kst-password-login>
+  <kst-oauth-login (onAuth)="handleLoggedInUser($event)" [provider]="googleOAuthProvider"></kst-oauth-login>
+</div>
