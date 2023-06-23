@@ -1,0 +1,10 @@
+<div class="authentication-page">
+  <ng-container *ngIf="user() as userModel; else authenticationTmp">
+    <div>{{userModel.email}}</div>
+  </ng-container>
+  <ng-template #authenticationTmp>
+    <button routerLink="/auth/login">Login</button>
+    <button routerLink="/auth/sign-up">Sign up</button>
+  </ng-template>
+</div>
+
