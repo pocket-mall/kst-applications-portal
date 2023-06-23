@@ -1,0 +1,12 @@
+.password-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: max-content;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 4%;
+  cursor: pointer;
+}

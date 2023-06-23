@@ -1,0 +1,111 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="signUpFormGroup">
+	<div *ngFor="let civility of civilityEnum | keyvalue">
+		<label for="civility-{{ civility.value }}">{{ labels['civility'] }}</label>
+		<input
+			formControlName="civility"
+			id="civility-{{ civility.value }}"
+			type="radio"
+			value="{{ civility.value }}"
+		/>{{ civility.value }}
+		<div *ngIf="isControlInvalid('civility') && signUpFormGroup.get('civility')?.touched" class="error-message">
+			{{ getErrorMessage('civility') }}
+		</div>
+	</div>
+
+	<div>
+		<label for="lastName">{{ labels['lastName'] }}</label>
+		<input formControlName="lastName" id="lastName" type="text" />
+		<div *ngIf="isControlInvalid('lastName') && signUpFormGroup.get('lastName')?.touched" class="error-message">
+			{{ getErrorMessage('lastName') }}
+		</div>
+	</div>
+
+	<div>
+		<label for="firstName">{{ labels['firstName'] }}</label>
+		<input formControlName="firstName" id="firstName" type="text" />
+		<div *ngIf="isControlInvalid('firstName') && signUpFormGroup.get('firstName')?.touched" class="error-message">
+			{{ getErrorMessage('firstName') }}
+		</div>
+	</div>
+
+	<div>
+		<label for="phone">{{ labels['phone'] }}</label>
+		<input formControlName="phone" id="phone" kstRestrictNumeric type="text" />
+		<div *ngIf="isControlInvalid('phone') && signUpFormGroup.get('phone')?.touched" class="error-message">
+			{{ getErrorMessage('phone') }}
+		</div>
+	</div>
+
+	<div>
+		<label for="email">{{ labels['email'] }}</label>
+		<input formControlName="email" id="email" type="email" />
+		<div *ngIf="isControlInvalid('email') && signUpFormGroup.get('email')?.touched" class="error-message">
+			{{ getErrorMessage('email') }}
+		</div>
+	</div>
+
+	<div>
+		<label for="password">{{ labels['password'] }}</label>
+		<div class="password-container">
+			<input
+				[type]="isPasswordVisible ? 'text' : 'password'"
+				formControlName="password"
+				id="password"
+				type="password"
+			/>
+			<span (click)="togglePasswordVisibility()" class="password-toggle">
+				<i [ngClass]="eyeIconClass" class="mdi"></i>
+			</span>
+		</div>
+		<div *ngIf="isControlInvalid('password') && signUpFormGroup.get('password')?.touched" class="error-message">
+			{{ getErrorMessage('password') }}
+		</div>
+	</div>
+
+	<fieldset formGroupName="address">
+		<div>
+			<label for="street">{{ labels['street'] }}</label>
+			<input formControlName="street" id="street" type="text" />
+			<div *ngIf="isControlInvalid('street') && signUpFormGroup.get('street')?.touched" class="error-message">
+				{{ getErrorMessage('street') }}
+			</div>
+		</div>
+
+		<div>
+			<label for="city">{{ labels['city'] }}</label>
+			<input formControlName="city" id="city" type="text" />
+			<div *ngIf="isControlInvalid('city') && signUpFormGroup.get('city')?.touched" class="error-message">
+				{{ getErrorMessage('city') }}
+			</div>
+		</div>
+
+		<div>
+			<label for="zipcode">{{ labels['zipcode'] }}</label>
+			<input formControlName="zipcode" id="zipcode" type="text" />
+			<div *ngIf="isControlInvalid('zipcode') && signUpFormGroup.get('zipcode')?.touched" class="error-message">
+				{{ getErrorMessage('zipcode') }}
+			</div>
+		</div>
+
+		<div>
+			<label for="complement">{{ labels['complement'] }}</label>
+			<input formControlName="complement" id="complement" type="text" />
+			<div
+				*ngIf="isControlInvalid('complement') && signUpFormGroup.get('complement')?.touched"
+				class="error-message"
+			>
+				{{ getErrorMessage('complement') }}
+			</div>
+		</div>
+	</fieldset>
+
+	<div>
+		<label for="birthday">{{ labels['birthday'] }}</label>
+		<input formControlName="birthday" id="birthday" type="text" />
+		<div *ngIf="isControlInvalid('birthday') && signUpFormGroup.get('birthday')?.touched" class="error-message">
+			{{ getErrorMessage('birthday') }}
+		</div>
+	</div>
+
+	<button type="submit">Sign Up</button>
+</form>

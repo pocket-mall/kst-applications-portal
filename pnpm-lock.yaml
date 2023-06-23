@@ -31,6 +31,9 @@ dependencies:
   '@angular/router':
     specifier: ^16.0.3
     version: 16.0.3(@angular/common@16.0.3)(@angular/core@16.0.3)(@angular/platform-browser@16.0.3)(rxjs@7.8.1)
+  '@mdi/font':
+    specifier: ^7.2.96
+    version: 7.2.96
   pocketbase:
     specifier: ^0.15.0
     version: 0.15.0
@@ -2737,6 +2740,10 @@ packages:
       '@material/feature-targeting': 15.0.0-canary.576d3d2c8.0
       '@material/theme': 15.0.0-canary.576d3d2c8.0
       tslib: 2.5.2
+    dev: false
+
+  /@mdi/font@7.2.96:
+    resolution: {integrity: sha512-e//lmkmpFUMZKhmCY9zdjRe4zNXfbOIJnn6xveHbaV2kSw5aJ5dLXUxcRt1Gxfi7ZYpFLUWlkG2MGSFAiqAu7w==}
     dev: false
 
   /@ngtools/webpack@16.0.3(@angular/compiler-cli@16.0.3)(typescript@5.0.4)(webpack@5.80.0):
