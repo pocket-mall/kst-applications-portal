@@ -1,6 +1,7 @@
 import { JsonObject, JsonProperty } from 'typescript-json-serializer';
 import { CivilityEnum } from '../../profile/enums/civility.enum';
 import { UserResponseModel } from './user.response.model';
+import { fetchUserResponseModel } from '../helpers/extact-model.helper';
 
 @JsonObject()
 export class UserProfileResponseModel {
@@ -22,7 +23,7 @@ export class UserProfileResponseModel {
 	@JsonProperty()
 	public birthday: string | undefined;
 
-	@JsonProperty({ required: true })
+	@JsonProperty({ name: 'expand', required: true, beforeDeserialize: fetchUserResponseModel })
 	public user: UserResponseModel | undefined;
 
 	@JsonProperty()
