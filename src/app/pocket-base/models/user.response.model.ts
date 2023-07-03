@@ -1,7 +1,7 @@
 import { JsonObject, JsonProperty } from 'typescript-json-serializer';
 
 @JsonObject()
-export class AppUserModel {
+export class UserResponseModel {
 	@JsonProperty({ required: true })
 	id: string | undefined;
 

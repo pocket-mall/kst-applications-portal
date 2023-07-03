@@ -4,7 +4,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { GoogleLogoComponent } from '../../../common/components/svg-components/google-logo/google-logo.component';
 import { Observable, Subject, Subscription, switchMap, tap } from 'rxjs';
 import { Provider } from '../../enums/provider';
-import { AppUserModel } from '../../models/app.user.model';
+import { UserResponseModel } from '../../../pocket-base/models/user.response.model';
 
 @Component({
 	selector: 'kst-oauth-login',
@@ -15,7 +15,7 @@ import { AppUserModel } from '../../models/app.user.model';
 })
 export class OauthLoginComponent implements OnDestroy {
 	@Output()
-	public readonly onAuth: EventEmitter<AppUserModel> = new EventEmitter<AppUserModel>();
+	public readonly onAuth: EventEmitter<UserResponseModel> = new EventEmitter<UserResponseModel>();
 
 	@Input({ required: true })
 	provider!: Provider;
@@ -41,7 +41,7 @@ export class OauthLoginComponent implements OnDestroy {
 			this.handleLogin$
 				.pipe(
 					switchMap(() => this.authenticationService.appUserOAuth(this.provider)),
-					tap((appUser: AppUserModel | undefined) => {
+					tap((appUser: UserResponseModel | undefined) => {
 						if (appUser) {
 							this.onAuth.emit(appUser);
 						}

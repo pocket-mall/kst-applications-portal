@@ -4,7 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthenticationService } from '../../services/authentication.service';
 import { Observable, Subject, Subscription, switchMap, tap } from 'rxjs';
 import { LoginFormModel } from '../../models/login.form.model';
-import { AppUserModel } from '../../models/app.user.model';
+import { UserResponseModel } from '../../../pocket-base/models/user.response.model';
 
 @Component({
 	selector: 'kst-password-login',
@@ -15,7 +15,7 @@ import { AppUserModel } from '../../models/app.user.model';
 })
 export class PasswordLoginComponent implements OnDestroy {
 	@Output()
-	public readonly onAuth: EventEmitter<AppUserModel> = new EventEmitter<AppUserModel>();
+	public readonly onAuth: EventEmitter<UserResponseModel> = new EventEmitter<UserResponseModel>();
 
 	protected loginFormGroup = new FormGroup({
 		email: new FormControl('', [Validators.email, Validators.required]),
@@ -49,7 +49,7 @@ export class PasswordLoginComponent implements OnDestroy {
 					switchMap(({ email, password }: LoginFormModel) =>
 						this.authenticationService.appUserEmailAuth(email, password)
 					),
-					tap((appUser: AppUserModel | undefined) => {
+					tap((appUser: UserResponseModel | undefined) => {
 						if (appUser) {
 							this.onAuth.emit(appUser);
 						}

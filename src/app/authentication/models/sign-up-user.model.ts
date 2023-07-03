@@ -3,12 +3,12 @@ import { AddressModel } from './address.model';
 import { CivilityEnum } from '../../profile/enums/civility.enum';
 
 @JsonObject()
-export class CreateUserRequestModel {
+export class SignUpUserModel {
 	@JsonProperty({ required: true })
-	public email: string | undefined;
+	public email!: string;
 
 	@JsonProperty({ required: true })
-	public password: string | undefined;
+	public password!: string;
 
 	@JsonProperty({ required: true })
 	public civility: CivilityEnum | undefined;

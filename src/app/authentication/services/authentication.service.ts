@@ -1,53 +1,50 @@
-import { Injectable } from '@angular/core';
-import PocketBase, { RecordAuthResponse } from 'pocketbase';
-import { catchError, from, map, Observable, of, switchMap } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { AdminAuthResponse } from '../models/admin.auth.response.model';
-import { AppUserModel } from '../models/app.user.model';
+import { inject, Injectable } from '@angular/core';
+import { RecordAuthResponse } from 'pocketbase';
+import { catchError, map, Observable, of, switchMap } from 'rxjs';
+import { AdminAuthResponse } from '../../pocket-base/models/admin.auth.response.model';
+import { UserResponseModel } from '../../pocket-base/models/user.response.model';
 import { deserializeObject } from '../../common/helpers/deserializer';
 import { Provider } from '../enums/provider';
-import { CreateUserRequestModel } from '../models/create-user-request.model';
-import { UserProfile } from '../../user/models/UserProfile';
+import { SignUpUserModel } from '../models/sign-up-user.model';
+import { UserProfileResponseModel } from '../../pocket-base/models/user.profile.response.model';
+import { PocketBaseClientService } from '../../pocket-base/services/pocket-base-client.service';
+import { UserService } from '../../user/services/user.service';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class AuthenticationService {
-	private readonly userCollection: string = 'users';
-	private readonly profileCollection: string = 'profiles';
-	private readonly pocketBaseClient: PocketBase;
+	private readonly pocketBaseClient = inject(PocketBaseClientService);
+	private readonly userService = inject(UserService);
 
-	constructor() {
-		this.pocketBaseClient = new PocketBase(environment.coreApiEndPoint);
-	}
+	constructor() {}
 
 	public adminAuthentication(email: string, password: string): Observable<AdminAuthResponse | undefined> {
-		return from(this.pocketBaseClient.admins.authWithPassword(email, password)).pipe(
-			catchError((err: any) => of(undefined))
-		);
+		return this.pocketBaseClient.adminAuthentication(email, password);
 	}
 
-	public appUserEmailAuth(email: string, password: string): Observable<AppUserModel | undefined> {
-		return from(this.pocketBaseClient.collection(this.userCollection).authWithPassword(email, password)).pipe(
+	public appUserEmailAuth(email: string, password: string): Observable<UserResponseModel | undefined> {
+		return this.pocketBaseClient.userEmailAuth(email, password).pipe(
 			map((authData: RecordAuthResponse) => {
-				return deserializeObject<AppUserModel>(authData.record, AppUserModel) ?? undefined;
+				return deserializeObject<UserResponseModel>(authData.record, UserResponseModel) ?? undefined;
 			}),
 			catchError((err: any) => of(undefined))
 		);
 	}
 
-	public appUserOAuth(provider: Provider): Observable<AppUserModel | undefined> {
-		this.pocketBaseClient.authStore.clear();
-		return from(this.pocketBaseClient.collection(this.userCollection).authWithOAuth2({ provider })).pipe(
+	public appUserOAuth(provider: Provider): Observable<UserResponseModel | undefined> {
+		this.pocketBaseClient.cleanAuthenticationSession();
+
+		return this.pocketBaseClient.userOAuth(provider).pipe(
 			map((authData: RecordAuthResponse) => {
-				return deserializeObject<AppUserModel>(authData.record, AppUserModel) ?? undefined;
+				return deserializeObject<UserResponseModel>(authData.record, UserResponseModel) ?? undefined;
 			}),
 			catchError((err: any) => of(undefined))
 		);
 	}
 
-	public signUp(requestModel: CreateUserRequestModel): Observable<UserProfile | undefined> {
-		const user$ = this.createUser(requestModel);
+	public signUp(requestModel: SignUpUserModel): Observable<UserProfileResponseModel | undefined> {
+		const user$ = this.userService.createUser(requestModel.email, requestModel.password);
 
 		return user$.pipe(
 			switchMap(() => {
@@ -56,44 +53,11 @@ export class AuthenticationService {
 				}
 				return this.appUserEmailAuth(requestModel.email, requestModel.password);
 			}),
-			switchMap((appUser: AppUserModel | undefined) => {
+			switchMap((appUser: UserResponseModel | undefined) => {
 				if (appUser) {
-					return this.createUserProfile(appUser.id, requestModel);
+					return this.userService.createUserProfile(appUser.id, requestModel);
 				}
 				return of(undefined);
-			})
-		);
-	}
-
-	private createUser(requestModel: CreateUserRequestModel): Observable<AppUserModel> {
-		const userRequestModel = {
-			email: requestModel.email,
-			password: requestModel.password,
-			passwordConfirm: requestModel.password
-		};
-		return from(this.pocketBaseClient.collection(this.userCollection).create<AppUserModel>(userRequestModel));
-	}
-
-	private createUserProfile(
-		userId: string | undefined,
-		requestModel: CreateUserRequestModel
-	): Observable<UserProfile | undefined> {
-		if (userId === undefined) {
-			return of(undefined);
-		}
-
-		const profileRequestModel = {
-			birthday: requestModel.birthDay,
-			civility: requestModel.civility,
-			phone: requestModel.phone,
-			firstName: requestModel.firstName,
-			lastName: requestModel.lastName,
-			user: userId
-		};
-
-		return from(
-			this.pocketBaseClient.collection(this.profileCollection).create<UserProfile>(profileRequestModel, {
-				expand: 'user'
 			})
 		);
 	}

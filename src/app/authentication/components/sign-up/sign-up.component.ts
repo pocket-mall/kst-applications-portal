@@ -7,7 +7,7 @@ import { RestrictNumericDirective } from '../../../common/directives/restrict-nu
 import { CivilityEnum } from '../../../profile/enums/civility.enum';
 import { AuthenticationService } from '../../services/authentication.service';
 import { deserializeObject } from '../../../common/helpers/deserializer';
-import { CreateUserRequestModel } from '../../models/create-user-request.model';
+import { SignUpUserModel } from '../../models/sign-up-user.model';
 
 @Component({
 	selector: 'kst-sign-up',
@@ -78,7 +78,7 @@ export class SignUpComponent {
 	protected onSubmit() {
 		if (this.signUpFormGroup.valid) {
 			const formData = this.signUpFormGroup.value;
-			const request = deserializeObject<CreateUserRequestModel>(formData, CreateUserRequestModel);
+			const request = deserializeObject<SignUpUserModel>(formData, SignUpUserModel);
 			if (request) {
 				this.authenticationService.signUp(request).subscribe((profile: any) => console.log(profile));
 			}

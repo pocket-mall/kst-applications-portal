@@ -1,9 +1,9 @@
 import { JsonObject, JsonProperty } from 'typescript-json-serializer';
 import { CivilityEnum } from '../../profile/enums/civility.enum';
-import { AppUserModel } from '../../authentication/models/app.user.model';
+import { UserResponseModel } from './user.response.model';
 
 @JsonObject()
-export class UserProfile {
+export class UserProfileResponseModel {
 	@JsonProperty({ required: true })
 	public id: string | undefined;
 
@@ -23,7 +23,7 @@ export class UserProfile {
 	public birthday: string | undefined;
 
 	@JsonProperty({ required: true })
-	public user: AppUserModel | undefined;
+	public user: UserResponseModel | undefined;
 
 	@JsonProperty()
 	public created: string | undefined;

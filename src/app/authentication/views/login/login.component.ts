@@ -1,10 +1,10 @@
 import { Component, computed, Signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PasswordLoginComponent } from '../../components/password-login/password-login.component';
-import { OauthLoginComponent } from '../../components/oauth-login/oauth-login.component';
 import { Provider } from '../../enums/provider';
-import { AppUserModel } from '../../models/app.user.model';
+import { UserResponseModel } from '../../../pocket-base/models/user.response.model';
 import { UserService } from '../../../user/services/user.service';
+import { OauthLoginComponent } from '../../components/oauth-login/oauth-login.component';
 
 @Component({
 	selector: 'kst-login',
@@ -15,13 +15,13 @@ import { UserService } from '../../../user/services/user.service';
 })
 export class LoginComponent {
 	protected readonly googleOAuthProvider: Provider = Provider.Google;
-	protected user: Signal<AppUserModel | undefined>;
+	protected user: Signal<UserResponseModel | undefined>;
 
 	constructor(private readonly userService: UserService) {
 		this.user = computed(() => userService.user());
 	}
 
-	protected handleLoggedInUser(appUser: AppUserModel): void {
+	protected handleLoggedInUser(appUser: UserResponseModel): void {
 		this.userService.user.set(appUser);
 	}
 }
