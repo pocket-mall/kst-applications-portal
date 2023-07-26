@@ -4,10 +4,10 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { frenchPhoneNumberValidator } from '../../../common/validators/french-phone.validator';
 import { dateFormatValidator } from '../../../common/validators/date-format.validator';
 import { RestrictNumericDirective } from '../../../common/directives/restrict-numeric.directive';
-import { CivilityEnum } from '../../../profile/enums/civility.enum';
 import { AuthenticationService } from '../../services/authentication.service';
 import { deserializeObject } from '../../../common/helpers/deserializer';
 import { SignUpUserModel } from '../../models/sign-up-user.model';
+import { UserProfileResponseModel } from '../../../pocket-base/models/user.profile.response.model';
 
 @Component({
 	selector: 'kst-sign-up',
@@ -19,24 +19,14 @@ import { SignUpUserModel } from '../../models/sign-up-user.model';
 export class SignUpComponent {
 	protected labels: { [key: string]: string } = {};
 	protected isPasswordVisible: boolean;
-	protected eyeIconClass = 'mdi-eye';
-	protected civilityEnum: typeof CivilityEnum = CivilityEnum;
-
-	protected addressFormGroup = new FormGroup({
-		street: new FormControl(undefined),
-		city: new FormControl(undefined),
-		zipcode: new FormControl(undefined),
-		complement: new FormControl(undefined)
-	});
+	protected eyeIconClass: string = 'mdi-eye';
 
 	protected signUpFormGroup = new FormGroup({
-		civility: new FormControl('', [Validators.required]),
-		lastName: new FormControl('', [Validators.required]),
-		firstName: new FormControl('', [Validators.required]),
-		phone: new FormControl('', [Validators.required, frenchPhoneNumberValidator]),
 		email: new FormControl('', [Validators.email, Validators.required]),
 		password: new FormControl('', [Validators.minLength(8), Validators.required]),
-		address: this.addressFormGroup,
+		firstName: new FormControl('', [Validators.required]),
+		lastName: new FormControl('', [Validators.required]),
+		phone: new FormControl('', [Validators.required, frenchPhoneNumberValidator]),
 		birthday: new FormControl(undefined, [dateFormatValidator])
 	});
 
@@ -80,20 +70,17 @@ export class SignUpComponent {
 			const formData = this.signUpFormGroup.value;
 			const request = deserializeObject<SignUpUserModel>(formData, SignUpUserModel);
 			if (request) {
-				this.authenticationService.signUp(request).subscribe((profile: any) => console.log(profile));
+				this.authenticationService
+					.signUp(request)
+					.subscribe((profile: UserProfileResponseModel | undefined) => console.log(profile));
 			}
-			console.log(formData);
 		} else {
-			Object.keys(this.signUpFormGroup.controls).forEach((controlName) => {
-				const control = this.signUpFormGroup.get(controlName);
-				console.log(control?.errors);
-				control?.markAsTouched();
-			});
+			this.toggleInvalidForm();
 		}
 	}
 
 	private initializeLabels() {
-		this.labels['Civility'] = 'Civility';
+		this.labels['civility'] = '';
 		this.labels['lastName'] = 'Last Name';
 		this.labels['firstName'] = 'First Name';
 		this.labels['phone'] = 'Phone';
@@ -104,5 +91,12 @@ export class SignUpComponent {
 		this.labels['zipcode'] = 'Zip Code';
 		this.labels['complement'] = 'Complement';
 		this.labels['birthday'] = 'Birthday';
+	}
+
+	private toggleInvalidForm() {
+		Object.keys(this.signUpFormGroup.controls).forEach((controlName) => {
+			const control = this.signUpFormGroup.get(controlName);
+			control?.markAsTouched();
+		});
 	}
 }
