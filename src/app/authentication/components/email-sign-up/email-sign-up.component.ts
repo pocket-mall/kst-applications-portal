@@ -10,13 +10,13 @@ import { SignUpUserModel } from '../../models/sign-up-user.model';
 import { UserProfileResponseModel } from '../../../pocket-base/models/user.profile.response.model';
 
 @Component({
-	selector: 'kst-sign-up',
+	selector: 'kst-email-sign-up',
 	standalone: true,
 	imports: [CommonModule, ReactiveFormsModule, RestrictNumericDirective],
-	templateUrl: './sign-up.component.html',
-	styleUrls: ['./sign-up.component.scss']
+	templateUrl: './email-sign-up.component.html',
+	styleUrls: ['./email-sign-up.component.scss']
 })
-export class SignUpComponent {
+export class EmailSignUpComponent {
 	protected labels: { [key: string]: string } = {};
 	protected isPasswordVisible: boolean;
 	protected eyeIconClass: string = 'mdi-eye';

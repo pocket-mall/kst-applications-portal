@@ -2,5 +2,5 @@ import { IEnvironment } from './ienvironment';
 
 export const environment: IEnvironment = {
 	production: false,
-	coreApiEndPoint: 'http://localhost:8090/'
+	coreApiEndPoint: 'https://staging.kisuto.com/'
 };

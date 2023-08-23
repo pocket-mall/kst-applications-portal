@@ -1,0 +1,20 @@
+<div class="sign-up-container">
+	<div class="sign-up-with-email">
+		<form (ngSubmit)="submitForm()" [formGroup]="emailSignUpFormGroup">
+			<div>
+				<input formControlName="email" id="email" placeholder="Enter Email" type="email" />
+				<div
+					*ngIf="isControlInvalid('email') && emailSignUpFormGroup.get('email')?.touched"
+					class="error-message"
+				>
+					Please enter a valid email address.
+				</div>
+			</div>
+
+			<button class="continue-btn" type="submit">Continue</button>
+		</form>
+	</div>
+	<div class="sign-up-with-google">
+		<kst-oauth-login [provider]="Provider.Google"></kst-oauth-login>
+	</div>
+</div>

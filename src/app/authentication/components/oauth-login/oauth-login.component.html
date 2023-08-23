@@ -1,6 +1,9 @@
 <div>
-  <div (click)="handleLogin()" class="google-oauth">
-    <kst-google-logo></kst-google-logo>
-    <span>Continue with Googles</span>
-  </div>
+	<div (click)="handleLogin()" *ngIf="showLogin(); else userConfirmation" class="google-oauth">
+		<kst-google-logo></kst-google-logo>
+		<span>Continue with {{ provider | titlecase }}</span>
+	</div>
+	<ng-template #userConfirmation>
+		<div>Extra information</div>
+	</ng-template>
 </div>

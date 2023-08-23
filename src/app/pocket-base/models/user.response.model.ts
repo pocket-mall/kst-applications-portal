@@ -3,20 +3,20 @@ import { JsonObject, JsonProperty } from 'typescript-json-serializer';
 @JsonObject()
 export class UserResponseModel {
 	@JsonProperty({ required: true })
-	id: string | undefined;
+	id!: string;
 
 	@JsonProperty({ required: true })
-	username: string | undefined;
+	username!: string;
 
 	@JsonProperty({ required: true })
-	email: string | undefined;
+	email!: string;
 
 	@JsonProperty()
-	verified: boolean | undefined;
+	verified!: boolean;
 
 	@JsonProperty()
-	created: string | undefined;
+	created!: string;
 
 	@JsonProperty()
-	updated: string | undefined;
+	updated!: string;
 }

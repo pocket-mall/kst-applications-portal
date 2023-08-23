@@ -12,14 +12,12 @@ import { PocketBaseClientService } from '../../pocket-base/services/pocket-base-
 })
 export class UserService {
 	public user: WritableSignal<UserResponseModel | undefined> = signal<UserResponseModel | undefined>(undefined);
-
+	public userProfile: WritableSignal<UserProfileResponseModel | undefined> = signal<
+		UserProfileResponseModel | undefined
+	>(undefined);
 	private readonly pocketBaseClient = inject(PocketBaseClientService);
 
 	constructor() {}
-
-	createUser(email: string, password: string): Observable<UserResponseModel | undefined> {
-		return this.pocketBaseClient.createUser(email, password, password);
-	}
 
 	createUserProfile(
 		userId: string | undefined,
@@ -33,10 +31,22 @@ export class UserService {
 			{ user: userId, ...requestModel },
 			ProfileRequestModel
 		);
+
 		if (profileDto) {
 			return this.pocketBaseClient.createProfile(profileDto);
 		}
 
 		return of(undefined);
+	}
+
+	createUser(email: string, password: string): Observable<UserResponseModel | undefined> {
+		return this.pocketBaseClient.createUser(email, password, password);
+	}
+
+	getUserProfile(userId: string | undefined): Observable<UserProfileResponseModel | undefined> {
+		if (userId === undefined) {
+			return of(undefined);
+		}
+		return this.pocketBaseClient.getUserProfile(userId);
 	}
 }
